@@ -7,13 +7,11 @@ public class VentanaConfiguracion extends JFrame{
 		super("Puerta Segura");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		add(new PanelConfiguracion());
-		setSize(500,200);
+		setSize(750,150);
 		setVisible(true);
 	}
 	
 	public static void main(String args[]){
-		Scp scp= new Scp();
-       	scp.ScpFrom();
 		new VentanaConfiguracion();
 	}
 }

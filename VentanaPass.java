@@ -6,7 +6,7 @@ public class VentanaPass extends JFrame{
 	
 	public VentanaPass(){
 		super("Configurar Contraseña");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(EXIT_ON_CLOSE);
 		crearPanel();
 		setSize(500,200);
 		setVisible(true);
@@ -52,6 +52,7 @@ public class VentanaPass extends JFrame{
 	private void crearPanelInferior(){
 		panelInferior= new JPanel();
 	    BoxLayout layoutBotones = new BoxLayout(panelInferior, BoxLayout.X_AXIS);
+	    panelInferior.setLayout(layoutBotones);
 	    JButton botonAceptar = new JButton("Aceptar");
 	    JButton botonCancelar= new JButton("Cancelar");
 	    //botonPass.addActionListener(ListenerBotonPass);

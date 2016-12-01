@@ -14,15 +14,20 @@ import javax.swing.*;
 import java.io.*;
 
 public class Scp{
-    static String user="root";
-    static String host="192.168.100.33";
-    static String pass="arduino";
-    static String rfile="/mnt/sda1/config.txt";
-    static String lfile="config.txt";
+    static String user;
+    static String host;
+    static String pass;
+    static String rfile;
+    static String lfile;
     JSch jsch;
     Session session;
 
-    public Scp(){
+    public Scp(String user, String host,String pass,String rfile,String lfile){
+      this.user=user;
+      this.host=host;
+      this.pass=pass;
+      this.rfile=rfile;
+      this.lfile=lfile;
       try{
           jsch=new JSch();
           session=jsch.getSession(user, host, 22);

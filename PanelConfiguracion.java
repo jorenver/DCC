@@ -13,6 +13,9 @@ import java.io.IOException;
 
 public class PanelConfiguracion extends JPanel {
 	private JPanel panelInferior, panelSuperior;
+	private JTextField ipAddressTextField;
+	private JPasswordField passTextField;
+	private JButton botonConectar, botonPass, botonCorreos ,botonFotos,botonDesconectar;
 
 	public PanelConfiguracion(){
 		setSize(300,300);
@@ -28,11 +31,23 @@ public class PanelConfiguracion extends JPanel {
 
 	private void crearPanelInferior(){
 		panelInferior= new JPanel();
-	    BoxLayout layoutBotones = new BoxLayout(panelInferior, BoxLayout.X_AXIS);
-	   	JButton botonPass = new JButton("Configurar Contraseña");
-	    JButton botonCorreos = new JButton("Configurar Correos");
-	    JButton botonFotos= new JButton("Fotos Intrusos");
+		BoxLayout layoutBotones = new BoxLayout(panelInferior, BoxLayout.X_AXIS);
+		panelInferior.setLayout(layoutBotones);
+	    botonConectar = new JButton("Conectar");
+	    botonDesconectar = new JButton("Desconectar");
+	    botonPass = new JButton("Configurar Contraseña");
+	    botonCorreos = new JButton("Configurar Correos");
+	    botonFotos= new JButton("Fotos Intrusos");
+	    botonConectar.setEnabled(true);
+	    botonDesconectar.setEnabled(false);
+	    botonPass.setEnabled(false);
+	    botonCorreos.setEnabled(false);
+	    botonFotos.setEnabled(false);
+	    botonConectar.addActionListener(ListenerBotonConectar);
 	    botonPass.addActionListener(ListenerBotonPass);
+	    botonCorreos.addActionListener(ListenerBotonCorreos);
+	    panelInferior.add(botonConectar);
+	    panelInferior.add(botonDesconectar);
 	    panelInferior.add(botonPass);
 	    panelInferior.add(botonCorreos);
 	    panelInferior.add(botonFotos);
@@ -49,10 +64,10 @@ public class PanelConfiguracion extends JPanel {
 
 	    // Create the components we will put in the form
 	    JLabel ipAddressLabel = new JLabel( "Direccion IP:" );
-	    JTextField ipAddressTextField = new JTextField( 20 );
+	    ipAddressTextField = new JTextField( 20 );
 	    
 	    JLabel passLabel = new JLabel( "Pin:" );
-	    JTextField passTextField = new JPasswordField( 20 );
+	    passTextField = new JPasswordField( 20 );
 
 	    // definen los elementos que comparten columna
 	    layoutForm.setHorizontalGroup( layoutForm.createSequentialGroup()
@@ -79,17 +94,49 @@ public class PanelConfiguracion extends JPanel {
 
 	ActionListener ListenerBotonPass =new ActionListener(){
 		public void actionPerformed(ActionEvent e){
+			new VentanaPass();
+		}
+
+
+	};
+	ActionListener ListenerBotonCorreos =new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			new VentanaCorreos();
+		}
+
+
+	};
+	ActionListener ListenerBotonConectar=new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			String user="root";
+    		String host=ipAddressTextField.getText();
+    		String pass="arduino";
+    		String rfile="/mnt/sda1/config.txt";
+    		String lfile="config.txt";
+
+			Scp scp= new Scp(user,host,pass,rfile,lfile);
+       		scp.ScpFrom();
        		String cadena;
        		try{
-        		FileReader f = new FileReader("./config.txt");
+        		FileReader f = new FileReader(lfile);
         		BufferedReader b = new BufferedReader(f);
-        		cadena = b.readLine();
+        		cadena = b.readLine().replaceAll("\n", ""); ;
             	System.out.println(cadena);
+            	System.out.println(passTextField.getPassword());
+            	System.out.println(cadena.equals(passTextField.getPassword()));
         		b.close();
+        		//if(cadena.equals(passTextField.getPassword())){
+        		if(true){
+        			botonConectar.setEnabled(false);
+	    			botonDesconectar.setEnabled(true);
+	    			botonPass.setEnabled(true);
+	    			botonCorreos.setEnabled(true);
+	    			botonFotos.setEnabled(true);
+        		}
         	}catch(IOException exection){
 
         	}
-			new VentanaPass();
+			
 		}
 	
 	};
