@@ -19,6 +19,7 @@ public class VentanaFotos extends JFrame{
 	public VentanaFotos(String ip){
 		super("Fotos Intrusos");
 		this.ip = ip;
+		System.out.println(ip);
 		crearPanel();
 		setSize(500,350);
 		setVisible(true);
@@ -71,7 +72,7 @@ public class VentanaFotos extends JFrame{
 
 			ChannelExec channel=(ChannelExec) session.openChannel("exec");
 			BufferedReader in=new BufferedReader(new InputStreamReader(channel.getInputStream()));
-			channel.setCommand("ls /mnt/sda1;");
+			channel.setCommand("ls /mnt/sda1/fotos;");
 			channel.connect();
 
 			String msg=null;
@@ -109,7 +110,7 @@ public class VentanaFotos extends JFrame{
 
 				ChannelExec channel=(ChannelExec) session.openChannel("exec");
 				BufferedReader in=new BufferedReader(new InputStreamReader(channel.getInputStream()));
-				channel.setCommand("rm /mnt/sda1/" + fileName + ";");
+				channel.setCommand("rm /mnt/sda1/fotos/" + fileName + ";");
 				channel.connect();
 				channel.disconnect();
 				session.disconnect();
@@ -128,11 +129,24 @@ public class VentanaFotos extends JFrame{
 			}
 			String fileName = (String)listaFotos.getModel().get(selection);
 			System.out.println(fileName);
-			listaFotos.getModel().remove(selection);
 
-			String rutaFile = "/mnt/sda1/" + fileName;
-			Scp scp = new Scp("root",ip,"arduino",rutaFile,fileName);
-			scp.ScpFrom();	
+			String rutaFile = "/mnt/sda1/fotos/" + fileName;
+			
+			JFileChooser chooser = new JFileChooser();
+			chooser.setCurrentDirectory(new java.io.File("."));
+    		chooser.setDialogTitle("Descargar");
+    		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    		chooser.setAcceptAllFileFilterUsed(false);
+
+    		if (chooser.showOpenDialog(VentanaFotos.this) == JFileChooser.APPROVE_OPTION) { 
+				String folder = chooser.getSelectedFile().toString();
+				fileName = folder + "/" + fileName;
+				System.out.println(fileName);
+				Scp scp = new Scp("root",ip,"arduino",rutaFile,fileName);
+				scp.ScpFrom();
+      		}
+
+				
 		}
 	};
 
