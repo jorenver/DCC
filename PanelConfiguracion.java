@@ -102,20 +102,21 @@ public class PanelConfiguracion extends JPanel {
 	};
 	ActionListener ListenerBotonCorreos =new ActionListener(){
 		public void actionPerformed(ActionEvent e){
-			new VentanaCorreos();
+			new VentanaCorreos(scp);
 		}
 
 
 	};
 	ActionListener ListenerBotonConectar=new ActionListener(){
 		public void actionPerformed(ActionEvent e){
-			String user="root";
+			String user="jorge";
     		String host=ipAddressTextField.getText();
-    		String pass="arduino";
-    		String rfile="/mnt/sda1/config.txt";
+    		String pass=new String(passTextField.getPassword());
+    		//String pass="arduino";
+    		//String rfile="/mnt/sda1/config.txt";
+    		String rfile="/Users/jorge/Documents/DCC/pueba/config.txt";
     		String lfile="config.txt";
-
-			scp= new Scp(user,host,pass,rfile,lfile);
+    		scp= new Scp(user,host,pass,rfile,lfile);
        		scp.ScpFrom();
        		String cadena;
        		try{
@@ -133,11 +134,24 @@ public class PanelConfiguracion extends JPanel {
 	    			botonPass.setEnabled(true);
 	    			botonCorreos.setEnabled(true);
 	    			botonFotos.setEnabled(true);
+        		}else{
+
         		}
         	}catch(IOException exection){
-
+        		JOptionPane.showMessageDialog(null, "Credenciales incorrectas, se cierra la conecion!");
         	}
 			
+		}
+	
+	};
+
+	ActionListener ListenerBotonDesconectar=new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			botonConectar.setEnabled(true);
+	    	botonDesconectar.setEnabled(false);
+	    	botonPass.setEnabled(false);
+	    	botonCorreos.setEnabled(false);
+	    	botonFotos.setEnabled(false);
 		}
 	
 	};

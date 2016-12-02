@@ -12,11 +12,11 @@ public class VentanaCorreos extends JFrame{
 	private String pass;
 
 	
-	public VentanaCorreos(){
+	public VentanaCorreos(Scp scp){
 		super("Editar Correos");
 		//setDefaultCloseOperation(EXIT_ON_CLOSE);
 		crearPanel();
-		//this.scp=scp;
+		this.scp=scp;
 		setSize(500,350);
 		setVisible(true);
 		
@@ -122,7 +122,8 @@ public class VentanaCorreos extends JFrame{
      				pw.println(listaCorreos.getModel().getElementAt(i));  
 				}
         		f.close();
-        		//JOptionPane.showMessageDialog(this, "Guardado Correctamente");
+        		scp.ScpTo();
+        		JOptionPane.showMessageDialog(null, "Guardado Correctamente!");
         	}catch(IOException exection){
 
         	}
