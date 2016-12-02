@@ -132,19 +132,8 @@ public class VentanaFotos extends JFrame{
 
 			String rutaFile = "/mnt/sda1/fotos/" + fileName;
 			
-			JFileChooser chooser = new JFileChooser();
-			chooser.setCurrentDirectory(new java.io.File("."));
-    		chooser.setDialogTitle("Descargar");
-    		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-    		chooser.setAcceptAllFileFilterUsed(false);
-
-    		if (chooser.showOpenDialog(VentanaFotos.this) == JFileChooser.APPROVE_OPTION) { 
-				String folder = chooser.getSelectedFile().toString();
-				folder = folder + "/";
-				System.out.println(folder);
-				Scp scp = new Scp("root",ip,"arduino",rutaFile,folder);
-				scp.ScpFrom();
-      		}
+			Scp scp = new Scp("root",ip,"arduino",rutaFile,fileName);
+			scp.ScpFrom();
 
 				
 		}
