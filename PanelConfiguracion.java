@@ -46,6 +46,7 @@ public class PanelConfiguracion extends JPanel {
 	    botonCorreos.setEnabled(false);
 	    botonFotos.setEnabled(false);
 	    botonConectar.addActionListener(ListenerBotonConectar);
+	    botonDesconectar.addActionListener(ListenerBotonDesconectar);
 	    botonPass.addActionListener(ListenerBotonPass);
 	    botonCorreos.addActionListener(ListenerBotonCorreos);
 	    botonFotos.addActionListener(ListenerBotonFotos);
@@ -97,7 +98,7 @@ public class PanelConfiguracion extends JPanel {
 
 	ActionListener ListenerBotonPass =new ActionListener(){
 		public void actionPerformed(ActionEvent e){
-			new VentanaPass();
+			new VentanaPass(scp);
 		}
 
 
@@ -119,12 +120,12 @@ public class PanelConfiguracion extends JPanel {
 
 	ActionListener ListenerBotonConectar=new ActionListener(){
 		public void actionPerformed(ActionEvent e){
-			String user="jorge";
+			String user="root";
     		String host=ipAddressTextField.getText();
-    		String pass=new String(passTextField.getPassword());
-    		//String pass="arduino";
-    		//String rfile="/mnt/sda1/config.txt";
-    		String rfile="/Users/jorge/Documents/DCC/pueba/config.txt";
+    		//String pass=new String(passTextField.getPassword());
+    		String pass="arduino";
+    		String rfile="/mnt/sda1/config.txt";
+    		//String rfile="/Users/jorge/Documents/DCC/pueba/config.txt";
     		String lfile="config.txt";
     		scp= new Scp(user,host,pass,rfile,lfile);
        		scp.ScpFrom();
@@ -132,23 +133,23 @@ public class PanelConfiguracion extends JPanel {
        		try{
         		FileReader f = new FileReader(lfile);
         		BufferedReader b = new BufferedReader(f);
-        		cadena = b.readLine().replaceAll("\n", ""); ;
-            	System.out.println(cadena);
-            	System.out.println(passTextField.getPassword());
-            	System.out.println(cadena.equals(passTextField.getPassword()));
+        		cadena = b.readLine();
+            	String aux= new String(passTextField.getPassword());
+            	//System.out.println(passTextField.getPassword());
+            	//System.out.println(cadena.equals(passTextField.getPassword()));
         		b.close();
-        		//if(cadena.equals(passTextField.getPassword())){
-        		if(true){
+        		if(cadena.equals(aux)){
         			botonConectar.setEnabled(false);
 	    			botonDesconectar.setEnabled(true);
 	    			botonPass.setEnabled(true);
 	    			botonCorreos.setEnabled(true);
 	    			botonFotos.setEnabled(true);
         		}else{
-
+        			scp.disconnect();
+        			JOptionPane.showMessageDialog(null, "Credenciales incorrectas, se cierra la conecion!");
         		}
         	}catch(IOException exection){
-        		JOptionPane.showMessageDialog(null, "Credenciales incorrectas, se cierra la conecion!");
+        		
         	}
 			
 		}
@@ -157,6 +158,7 @@ public class PanelConfiguracion extends JPanel {
 
 	ActionListener ListenerBotonDesconectar=new ActionListener(){
 		public void actionPerformed(ActionEvent e){
+			scp.disconnect();
 			botonConectar.setEnabled(true);
 	    	botonDesconectar.setEnabled(false);
 	    	botonPass.setEnabled(false);
