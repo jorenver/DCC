@@ -17,6 +17,7 @@ public class PanelConfiguracion extends JPanel {
 	private JPasswordField passTextField;
 	private JButton botonConectar, botonPass, botonCorreos ,botonFotos,botonDesconectar;
 	private Scp scp;
+	private String host;
 
 	public PanelConfiguracion(){
 		setSize(300,300);
@@ -110,7 +111,7 @@ public class PanelConfiguracion extends JPanel {
 	};
 	ActionListener ListenerBotonFotos =new ActionListener(){
 		public void actionPerformed(ActionEvent e){
-			new VentanaFotos();
+			new VentanaFotos(host);
 		}
 
 
@@ -119,7 +120,7 @@ public class PanelConfiguracion extends JPanel {
 	ActionListener ListenerBotonConectar=new ActionListener(){
 		public void actionPerformed(ActionEvent e){
 			String user="root";
-    		String host=ipAddressTextField.getText();
+    		host=ipAddressTextField.getText();
     		String pass="arduino";
     		String rfile="/mnt/sda1/config.txt";
     		String lfile="config.txt";

@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.io.*;
+import com.jcraft.jsch.*;
+import java.util.Properties;
+
+
 
 public class VentanaFotos extends JFrame{
 	private JPanel panelSuperior,panelInferior;
@@ -9,15 +13,15 @@ public class VentanaFotos extends JFrame{
 	private JButton botonCancelar,botonEliminar, botonDescargar;
 	private Scp scp;
 	private String pass;
+	private String ip;
 
 	
-	public VentanaFotos(){
+	public VentanaFotos(String ip){
 		super("Fotos Intrusos");
+		this.ip = ip;
 		crearPanel();
 		setSize(500,350);
 		setVisible(true);
-		System.out.println("Ventana Fotos");
-		
 	}
 	private void crearPanelSuperior(){
 		panelSuperior= new JPanel();
@@ -51,24 +55,35 @@ public class VentanaFotos extends JFrame{
 	    getContentPane().setLayout(layout);
 	    crearPanelSuperior();
 	    crearPanelInferior();
-	    cargarCorreos();
+	    cargarFotos();
 	}
 
-	private void cargarCorreos(){
-		String lfile="config.txt";
-		String cadena;
-       		try{
-        		FileReader f = new FileReader(lfile);
-        		BufferedReader b = new BufferedReader(f);
-        		pass = b.readLine();
-            	System.out.println(pass);
-            	while((cadena = b.readLine())!=null){
-            		listaFotos.getModel().addElement(cadena);
-            	}
-        		b.close();
-        	}catch(IOException exection){
+	private void cargarFotos(){
+		
+		JSch jsch=new JSch();
+		try { 
+			Session session=jsch.getSession("root",ip, 22);
+			session.setPassword("arduino");
+			Properties config = new Properties();
+			config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			session.connect();
 
-        	}
+			ChannelExec channel=(ChannelExec) session.openChannel("exec");
+			BufferedReader in=new BufferedReader(new InputStreamReader(channel.getInputStream()));
+			channel.setCommand("ls /mnt/sda1;");
+			channel.connect();
+
+			String msg=null;
+			while((msg=in.readLine())!=null){
+			  listaFotos.getModel().addElement(msg);
+			}
+
+			channel.disconnect();
+			session.disconnect();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 
@@ -76,15 +91,48 @@ public class VentanaFotos extends JFrame{
 	ActionListener ListenerBotonEliminar =new ActionListener(){
 		public void actionPerformed(ActionEvent e){
 			int selection = listaFotos.getSelectedIndex();
-			if (selection!=-1) {
-   				listaFotos.getModel().remove(selection);
+			if (selection==-1) {
+   				return;
 			}
+			String fileName = (String)listaFotos.getModel().get(selection);
+			System.out.println(fileName);
+			listaFotos.getModel().remove(selection);
+
+			JSch jsch=new JSch();
+			try { 
+				Session session=jsch.getSession("root",ip, 22);
+				session.setPassword("arduino");
+				Properties config = new Properties();
+				config.put("StrictHostKeyChecking", "no");
+				session.setConfig(config);
+				session.connect();
+
+				ChannelExec channel=(ChannelExec) session.openChannel("exec");
+				BufferedReader in=new BufferedReader(new InputStreamReader(channel.getInputStream()));
+				channel.setCommand("rm /mnt/sda1/" + fileName + ";");
+				channel.connect();
+				channel.disconnect();
+				session.disconnect();
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+
 		}
 	};
 
 	ActionListener ListenerBotonDescargar =new ActionListener(){
 		public void actionPerformed(ActionEvent e){
-			//ejecutar comandos para descargar la imagen	
+			int selection = listaFotos.getSelectedIndex();
+			if (selection==-1) {
+   				return;
+			}
+			String fileName = (String)listaFotos.getModel().get(selection);
+			System.out.println(fileName);
+			listaFotos.getModel().remove(selection);
+
+			String rutaFile = "/mnt/sda1/" + fileName;
+			Scp scp = new Scp("root",ip,"arduino",rutaFile,fileName);
+			scp.ScpFrom();	
 		}
 	};
 
