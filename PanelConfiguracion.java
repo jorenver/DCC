@@ -17,6 +17,7 @@ public class PanelConfiguracion extends JPanel {
 	private JPasswordField passTextField;
 	private JButton botonConectar, botonPass, botonCorreos ,botonFotos,botonDesconectar;
 	private Scp scp;
+	private String host;
 
 	public PanelConfiguracion(){
 		setSize(300,300);
@@ -47,6 +48,7 @@ public class PanelConfiguracion extends JPanel {
 	    botonConectar.addActionListener(ListenerBotonConectar);
 	    botonPass.addActionListener(ListenerBotonPass);
 	    botonCorreos.addActionListener(ListenerBotonCorreos);
+	    botonFotos.addActionListener(ListenerBotonFotos);
 	    panelInferior.add(botonConectar);
 	    panelInferior.add(botonDesconectar);
 	    panelInferior.add(botonPass);
@@ -107,6 +109,14 @@ public class PanelConfiguracion extends JPanel {
 
 
 	};
+	ActionListener ListenerBotonFotos =new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			new VentanaFotos(host);
+		}
+
+
+	};
+
 	ActionListener ListenerBotonConectar=new ActionListener(){
 		public void actionPerformed(ActionEvent e){
 			String user="jorge";
