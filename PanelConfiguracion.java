@@ -120,7 +120,7 @@ public class PanelConfiguracion extends JPanel {
 	ActionListener ListenerBotonConectar=new ActionListener(){
 		public void actionPerformed(ActionEvent e){
 			String user="jorge";
-    		String host=ipAddressTextField.getText();
+    		host=ipAddressTextField.getText();
     		String pass=new String(passTextField.getPassword());
     		//String pass="arduino";
     		//String rfile="/mnt/sda1/config.txt";
