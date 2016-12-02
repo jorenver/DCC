@@ -110,7 +110,8 @@ public class PanelConfiguracion extends JPanel {
 
 
 	};
-	ActionListener ListenerBotonFotos =new ActionListener		public void actionPerformed(ActionEvent e){
+	ActionListener ListenerBotonFotos =new ActionListener(){		
+		public void actionPerformed(ActionEvent e){
 			new VentanaFotos(host);
 		}
 
