@@ -47,6 +47,7 @@ public class PanelConfiguracion extends JPanel {
 	    botonConectar.addActionListener(ListenerBotonConectar);
 	    botonPass.addActionListener(ListenerBotonPass);
 	    botonCorreos.addActionListener(ListenerBotonCorreos);
+	    botonFotos.addActionListener(ListenerBotonFotos);
 	    panelInferior.add(botonConectar);
 	    panelInferior.add(botonDesconectar);
 	    panelInferior.add(botonPass);
@@ -107,6 +108,14 @@ public class PanelConfiguracion extends JPanel {
 
 
 	};
+	ActionListener ListenerBotonFotos =new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			new VentanaFotos();
+		}
+
+
+	};
+
 	ActionListener ListenerBotonConectar=new ActionListener(){
 		public void actionPerformed(ActionEvent e){
 			String user="root";
