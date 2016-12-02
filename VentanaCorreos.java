@@ -1,16 +1,22 @@
 import javax.swing.*;
 import java.awt.FlowLayout;
+import java.awt.event.*;
+import java.io.*;
 
 public class VentanaCorreos extends JFrame{
 	private JPanel panelSuperior,panelInferior,panelCentral;
 	private MyList listaCorreos;
 	private JButton botonAgregar,botonAceptar,botonCancelar,botonEliminar;
+	private JTextField correoTextField;
+	private Scp scp;
+	private String pass;
 
 	
 	public VentanaCorreos(){
 		super("Editar Correos");
 		//setDefaultCloseOperation(EXIT_ON_CLOSE);
 		crearPanel();
+		//this.scp=scp;
 		setSize(500,350);
 		setVisible(true);
 		
@@ -20,8 +26,9 @@ public class VentanaCorreos extends JFrame{
 		FlowLayout layoutCorreo = new FlowLayout();
 		panelSuperior.setLayout(layoutCorreo);
 		JLabel correoLabel = new JLabel( "Correo:" );
-	    JTextField correoTextField = new JPasswordField( 20 );
+	    correoTextField = new JTextField( 20 );
 		botonAgregar = new JButton("Agregar");
+		botonAgregar.addActionListener(ListenerBotonAgregar);
 		panelSuperior.add(correoLabel);
 		panelSuperior.add(correoTextField);
 		panelSuperior.add(botonAgregar);
@@ -33,8 +40,8 @@ public class VentanaCorreos extends JFrame{
 		panelCentral.setLayout(layoutCorreos);
 		JLabel correoLabel = new JLabel( "Correos:" );
 	    listaCorreos = new MyList();
-	    modelList(listaCorreos.getModel());
 	    botonEliminar = new JButton("Eliminar");
+	    botonEliminar.addActionListener(ListenerBotonEliminar);
 		panelCentral.add(correoLabel);
 		panelCentral.add(listaCorreos.getContenedor());
 		panelCentral.add(botonEliminar);
@@ -47,7 +54,8 @@ public class VentanaCorreos extends JFrame{
 	    panelInferior.setLayout(layoutBotones);
 	    botonAceptar = new JButton("Guardar");
 	    botonCancelar= new JButton("Cancelar");
-	    //botonPass.addActionListener(ListenerBotonPass);
+	    botonCancelar.addActionListener(ListenerBotonCancelar);
+	    botonAceptar.addActionListener(ListenerBotonGuardar);
 	    panelInferior.add(botonAceptar);
 	    panelInferior.add(botonCancelar);
 	    getContentPane().add(panelInferior);
@@ -59,21 +67,68 @@ public class VentanaCorreos extends JFrame{
 	    crearPanelSuperior();
 	    crearPanelCentral();
 	    crearPanelInferior();
+	    cargarCorreos();
 	}
-	private void modelList(DefaultListModel<String> model){
-	   model.addElement("Alumno 1");
-	   model.addElement("Alumno 2");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
-	   model.addElement("Alumno 3");
+
+	private void cargarCorreos(){
+		String lfile="config.txt";
+		String cadena;
+       		try{
+        		FileReader f = new FileReader(lfile);
+        		BufferedReader b = new BufferedReader(f);
+        		pass = b.readLine();
+            	System.out.println(pass);
+            	while((cadena = b.readLine())!=null){
+            		listaCorreos.getModel().addElement(cadena);
+            	}
+        		b.close();
+        	}catch(IOException exection){
+
+        	}
 	}
+
+
+
+	ActionListener ListenerBotonAgregar =new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			listaCorreos.getModel().addElement(correoTextField.getText());
+			correoTextField.setText("");
+		}
+	};
+
+	ActionListener ListenerBotonEliminar =new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			int selection = listaCorreos.getSelectedIndex();
+			if (selection!=-1) {
+   				listaCorreos.getModel().remove(selection);
+			}
+		}
+	};
+	ActionListener ListenerBotonCancelar =new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			dispose();		
+		}
+	};
+
+	ActionListener ListenerBotonGuardar =new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			String lfile="config.txt";
+			String cadena;
+       		try{
+        		FileWriter f = new FileWriter(lfile);
+        		PrintWriter pw = new PrintWriter(f);
+                pw.println(pass);
+                for(int i=0; i < listaCorreos.getModel().getSize(); i++){
+     				pw.println(listaCorreos.getModel().getElementAt(i));  
+				}
+        		f.close();
+        		//JOptionPane.showMessageDialog(this, "Guardado Correctamente");
+        	}catch(IOException exection){
+
+        	}
+
+			
+		}
+	};
+	
 }

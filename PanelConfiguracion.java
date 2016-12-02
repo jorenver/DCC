@@ -16,6 +16,7 @@ public class PanelConfiguracion extends JPanel {
 	private JTextField ipAddressTextField;
 	private JPasswordField passTextField;
 	private JButton botonConectar, botonPass, botonCorreos ,botonFotos,botonDesconectar;
+	private Scp scp;
 
 	public PanelConfiguracion(){
 		setSize(300,300);
@@ -114,7 +115,7 @@ public class PanelConfiguracion extends JPanel {
     		String rfile="/mnt/sda1/config.txt";
     		String lfile="config.txt";
 
-			Scp scp= new Scp(user,host,pass,rfile,lfile);
+			scp= new Scp(user,host,pass,rfile,lfile);
        		scp.ScpFrom();
        		String cadena;
        		try{
