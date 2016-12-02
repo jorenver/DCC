@@ -140,9 +140,9 @@ public class VentanaFotos extends JFrame{
 
     		if (chooser.showOpenDialog(VentanaFotos.this) == JFileChooser.APPROVE_OPTION) { 
 				String folder = chooser.getSelectedFile().toString();
-				fileName = folder + "/" + fileName;
-				System.out.println(fileName);
-				Scp scp = new Scp("root",ip,"arduino",rutaFile,fileName);
+				folder = folder + "/";
+				System.out.println(folder);
+				Scp scp = new Scp("root",ip,"arduino",rutaFile,folder);
 				scp.ScpFrom();
       		}
 
