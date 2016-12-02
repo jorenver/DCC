@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.io.*;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 
 public class VentanaPass extends JFrame{
 	private JPanel panelSuperior,panelInferior;
@@ -9,7 +13,7 @@ public class VentanaPass extends JFrame{
 	private Scp scp;
 	
 	public VentanaPass(Scp scp){
-		super("Configurar Contraseña");
+		super("Configurar Pin");
 		//setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.scp=scp;
 		crearPanel();
@@ -28,9 +32,51 @@ public class VentanaPass extends JFrame{
 	    // Create the components we will put in the form
 	    JLabel passLabel = new JLabel( "Nuevo Pin:" );
 	    passTextField = new JPasswordField( 20 );
+	    PlainDocument document = (PlainDocument) passTextField.getDocument();
+        document.setDocumentFilter(new DocumentFilter() {
+        	private boolean isNumber(String s) {
+			    try {
+			      Long.parseLong(s);
+			      return true;
+			    } catch (NumberFormatException e) {
+			      return false;
+			    }
+			  }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                String string = fb.getDocument().getText(0, fb.getDocument().getLength()) + text;
+
+                if (string.length() <= 16 && isNumber(string)) {
+                    super.replace(fb, offset, length, text, attrs); //To change body of generated methods, choose Tools | Templates.
+                }
+            }
+
+        });
 	    
 	    JLabel newPassLabel = new JLabel( "Repetir Nuevo Pin:" );
 	    newPassTextField = new JPasswordField( 20 );
+	    PlainDocument document2 = (PlainDocument) passTextField.getDocument();
+        document2.setDocumentFilter(new DocumentFilter() {
+        	private boolean isNumber(String s) {
+			    try {
+			      Long.parseLong(s);
+			      return true;
+			    } catch (NumberFormatException e) {
+			      return false;
+			    }
+			  }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                String string = fb.getDocument().getText(0, fb.getDocument().getLength()) + text;
+
+                if (string.length() <= 16 && isNumber(string)) {
+                    super.replace(fb, offset, length, text, attrs); //To change body of generated methods, choose Tools | Templates.
+                }
+            }
+
+        });
 
 	    // definen los elementos que comparten columna
 	    layoutForm.setHorizontalGroup( layoutForm.createSequentialGroup()

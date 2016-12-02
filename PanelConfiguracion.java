@@ -6,9 +6,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
-
-
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 
 
 public class PanelConfiguracion extends JPanel {
@@ -37,7 +38,7 @@ public class PanelConfiguracion extends JPanel {
 		panelInferior.setLayout(layoutBotones);
 	    botonConectar = new JButton("Conectar");
 	    botonDesconectar = new JButton("Desconectar");
-	    botonPass = new JButton("Configurar Contraseña");
+	    botonPass = new JButton("Configurar Pin");
 	    botonCorreos = new JButton("Configurar Correos");
 	    botonFotos= new JButton("Fotos Intrusos");
 	    botonConectar.setEnabled(true);
@@ -72,6 +73,28 @@ public class PanelConfiguracion extends JPanel {
 	    
 	    JLabel passLabel = new JLabel( "Pin:" );
 	    passTextField = new JPasswordField( 20 );
+
+	    PlainDocument document = (PlainDocument) passTextField.getDocument();
+        document.setDocumentFilter(new DocumentFilter() {
+        	private boolean isNumber(String s) {
+			    try {
+			      Long.parseLong(s);
+			      return true;
+			    } catch (NumberFormatException e) {
+			      return false;
+			    }
+			  }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                String string = fb.getDocument().getText(0, fb.getDocument().getLength()) + text;
+
+                if (string.length() <= 16 && isNumber(string)) {
+                    super.replace(fb, offset, length, text, attrs); //To change body of generated methods, choose Tools | Templates.
+                }
+            }
+
+        });
 
 	    // definen los elementos que comparten columna
 	    layoutForm.setHorizontalGroup( layoutForm.createSequentialGroup()
